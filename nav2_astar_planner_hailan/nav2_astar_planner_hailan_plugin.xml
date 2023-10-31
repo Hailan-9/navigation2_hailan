@@ -1,0 +1,15 @@
+<!-- （2）下一步是在软件包的根目录中创建该插件的描述文件
+·library path：插件库名称及其位置。
+
+·class name：类的名称。
+
+·class type：类的类型。
+
+·base class：基类的名称。
+
+·description：插件的描述。 -->
+<library path="nav2_astar_planner_hailan_plugin">
+	<class name="nav2_straightline_planner/StraightLine" type="nav2_straightline_planner::StraightLine" base_class_type="nav2_core::GlobalPlanner">
+	  <description>This is an example plugin which produces straight path.</description>
+	</class>
+</library>

@@ -31,6 +31,7 @@ namespace nav2_core
  * @class GlobalPlanner
  * @brief Abstract interface for global planners to adhere to with pluginlib
  */
+// 存在多个虚拟方法 即纯虚函数
 class GlobalPlanner
 {
 public:
@@ -47,6 +48,7 @@ public:
    * @param  tf A pointer to a TF buffer
    * @param  costmap_ros A pointer to the costmap
    */
+  // c++接口 也就是抽象类  纯虚函数
   virtual void configure(
     const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
     std::string name, std::shared_ptr<tf2_ros::Buffer> tf,
