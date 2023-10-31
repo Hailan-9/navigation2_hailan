@@ -287,9 +287,10 @@ map_saver:
 #       allow_unknown: true
 
 planner_server:
+  # ros__parameters字段下面的key:value, 将来都会对应的在Python的Node()类中对应生成一份节点参数.
   ros__parameters:
-    planner_plugin_types: ["nav2_straightline_planner/StraightLine"] # For Eloquent and earlier
-    planner_plugin_ids: ["GridBased"] # For Eloquent and earlier
+    # planner_plugin_types: ["nav2_straightline_planner/StraightLine"] # For Eloquent and earlier
+    # planner_plugin_ids: ["GridBased"] # For Eloquent and earlier
     plugins: ["GridBased"] # For Foxy and later
     use_sim_time: True
     GridBased:

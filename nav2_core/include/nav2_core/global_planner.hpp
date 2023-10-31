@@ -14,7 +14,8 @@
 
 #ifndef NAV2_CORE__GLOBAL_PLANNER_HPP_
 #define NAV2_CORE__GLOBAL_PLANNER_HPP_
-
+// 接口类(纯虚类)
+// 当我们想要实现自己的全局路径规划方法时，只需要继承GlobalPlanner类，按照标准接口实现，其他的都不要动
 #include <memory>
 #include <string>
 #include "rclcpp/rclcpp.hpp"

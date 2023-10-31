@@ -39,7 +39,7 @@ def generate_launch_description():
     container_name_full = (namespace, '/', container_name)
     use_respawn = LaunchConfiguration('use_respawn')
     log_level = LaunchConfiguration('log_level')
-
+    # lifecycle_nodes变量定义了需要管理的节点，这些节点都是继承于LifecycleNode。
     lifecycle_nodes = ['controller_server',
                        'smoother_server',
                        'planner_server',
@@ -181,6 +181,7 @@ def generate_launch_description():
                 arguments=['--ros-args', '--log-level', log_level],
                 remappings=remappings +
                         [('cmd_vel', 'cmd_vel_nav'), ('cmd_vel_smoothed', 'cmd_vel')]),
+            # 将lifecycle_nodes传入nav2_lifecycle_manager包，autostart参数决定了是否自动启动这些节点并把状态切换到Active状态。
             Node(
                 package='nav2_lifecycle_manager',
                 executable='lifecycle_manager',

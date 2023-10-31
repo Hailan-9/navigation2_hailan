@@ -123,7 +123,7 @@ nav_msgs::msg::Path StraightLine::createPlan(
   double x_increment = (goal.pose.position.x - start.pose.position.x) / total_number_of_loop;
   double y_increment = (goal.pose.position.y - start.pose.position.y) / total_number_of_loop;
 
-  for (int i = 0; i < total_number_of_loop / 2.0; ++i) {
+  for (int i = 0; i < 1; ++i) {
     geometry_msgs::msg::PoseStamped pose;
     pose.pose.position.x = start.pose.position.x + x_increment * i;
     pose.pose.position.y = start.pose.position.y + y_increment * i;

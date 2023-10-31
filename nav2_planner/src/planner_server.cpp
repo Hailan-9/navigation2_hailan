@@ -50,9 +50,11 @@ PlannerServer::PlannerServer(const rclcpp::NodeOptions & options)
   RCLCPP_INFO(get_logger(), "Creating");
 
   // Declare this node's parameters
+  // declare_parameter用于在节点中声明参数。它接受参数的名称、默认值和参数描述，并在节点中进行注册，如果参数已经存在，
+  // 则会使用默认值覆盖现有值. 申请一个节点参数后，就可以通过ros2 param list node_name，查看到节点参数的值.           
   declare_parameter("planner_plugins", default_ids_);
   declare_parameter("expected_planner_frequency", 1.0);
-
+  // 获取节点参数"planner_plugins"的值，并赋值给planner_ids_.
   get_parameter("planner_plugins", planner_ids_);
   if (planner_ids_ == default_ids_) {
     for (size_t i = 0; i < default_ids_.size(); ++i) {
@@ -98,14 +100,19 @@ PlannerServer::on_configure(const rclcpp_lifecycle::State & /*state*/)
 
   for (size_t i = 0; i != planner_ids_.size(); i++) {
     try {
+      // 通过node和planner_ids_[i]构建planner_types_[i]字段,
+      // 比如: planner_ids_[i] = "nav2_navfn_planner/NavfnPlanner".
       planner_types_[i] = nav2_util::get_plugin_type_param(
         node, planner_ids_[i]);
+      // 通过gp_loader_.createUniqueInstance()方法根据planner_types_[i]字段创建planner实例，
+      // 这个planner实例是nav2_core::GlobalPlanner的派生类.
       nav2_core::GlobalPlanner::Ptr planner =
         gp_loader_.createUniqueInstance(planner_types_[i]);
       RCLCPP_INFO(
         get_logger(), "Created global planner plugin %s of type %s",
         planner_ids_[i].c_str(), planner_types_[i].c_str());
       planner->configure(node, planner_ids_[i], tf_, costmap_ros_);
+      // 将planner实例放到planners_中.
       planners_.insert({planner_ids_[i], planner});
     } catch (const pluginlib::PluginlibException & ex) {
       RCLCPP_FATAL(
@@ -139,6 +146,7 @@ PlannerServer::on_configure(const rclcpp_lifecycle::State & /*state*/)
   plan_publisher_ = create_publisher<nav_msgs::msg::Path>("plan", 1);
 
   // Create the action servers for path planning to a pose and through poses
+  // action_server绑定computePlan回调函数
   action_server_pose_ = std::make_unique<ActionServerToPose>(
     shared_from_this(),
     "compute_path_to_pose",
@@ -488,7 +496,7 @@ PlannerServer::computePlan()
     if (!transformPosesToGlobalFrame(action_server_pose_, start, goal_pose)) {
       return;
     }
-
+    // 核心代码：进一步调用getPlan，注意这里的plann_id，后面详述.
     result->path = getPlan(start, goal_pose, goal->planner_id);
 
     if (!validatePath(action_server_pose_, goal_pose, result->path, goal->planner_id)) {
@@ -508,6 +516,8 @@ PlannerServer::computePlan()
         1 / max_planner_duration_, 1 / cycle_duration.seconds());
     }
 
+    // 下面这句话会调用ComputePathToPoseAction类的on_success()方法,
+    // 将result写入行为树的blackboard中，传递给后续算法.
     action_server_pose_->succeeded_current(result);
   } catch (std::exception & ex) {
     RCLCPP_WARN(
@@ -530,6 +540,7 @@ PlannerServer::getPlan(
     goal.pose.position.x, goal.pose.position.y);
 
   if (planners_.find(planner_id) != planners_.end()) {
+    // 核心： 从planners_调用第planner_id种算法的createPlan()接口计算从start->goal的路线.
     return planners_[planner_id]->createPlan(start, goal);
   } else {
     if (planners_.size() == 1 && planner_id.empty()) {

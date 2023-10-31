@@ -229,6 +229,10 @@ protected:
 
   // Planner
   PlannerMap planners_;
+  // gp_loader_根据string字段创建对应类的实例，ClassLoader用于管理和加载类。主要目的是为了动态加载和管理基于插件的类（Class），
+  // 通常用于实现插件化的软件架构，构造函数：ClassLoader(std::string package, std::string base_class, std::string attrib_name, 
+  // std::vector<std::string> plugin_xml_paths),其中：package：包含基类的软件包名称，base_class：要加载的类的基类的类型. 
+  // 举例说明：gp_loader_("nav2_core", "nav2_core::GlobalPlanner")
   pluginlib::ClassLoader<nav2_core::GlobalPlanner> gp_loader_;
   std::vector<std::string> default_ids_;
   std::vector<std::string> default_types_;

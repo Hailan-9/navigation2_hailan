@@ -54,7 +54,7 @@ namespace nav2_core
 {
 
 /**
- * @class Controller
+ * @class Controller 局部规划器
  * @brief controller interface that acts as a virtual base class for all controller plugins
  */
 class Controller
