@@ -49,7 +49,10 @@
 #include "nav_msgs/msg/path.hpp"
 #include "nav2_core/goal_checker.hpp"
 
-
+// 基于继承和多态，来实现插件式！！！
+// 这是基类，提供了一系列虚拟方法来供子类重写！！！
+// 里面重要的就是config、setplan和computeVelocityCommands这几个函数
+// nav2中的控制器也就是局部规划器
 namespace nav2_core
 {
 

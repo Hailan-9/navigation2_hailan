@@ -73,7 +73,7 @@ ControllerServer::~ControllerServer()
   controllers_.clear();
   costmap_thread_.reset();
 }
-
+// 生命周期节点中，执行和完成各种任务的函数
 nav2_util::CallbackReturn
 ControllerServer::on_configure(const rclcpp_lifecycle::State & /*state*/)
 {
@@ -480,7 +480,7 @@ void ControllerServer::computeAndPublishVelocity()
   nav_2d_msgs::msg::Twist2D twist = getThresholdedTwist(odom_sub_->getTwist());
 
   geometry_msgs::msg::TwistStamped cmd_vel_2d;
-
+  // 在这个地方调用局部路径规划的入口函数，计算出下发给电机的速度指令
   try {
     cmd_vel_2d =
       controllers_[current_controller_]->computeVelocityCommands(
